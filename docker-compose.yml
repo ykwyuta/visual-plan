@@ -1,0 +1,8 @@
+version: '3'
+
+services:
+  visualplan:
+    image: visualplan:0.0.1
+    container_name: visualplan
+    ports:
+      - "18501:8501"
