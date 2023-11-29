@@ -1,5 +1,24 @@
 import graphviz
 import time
+from openai import OpenAI
+import os
+
+client = OpenAI()
+client.api_key = os.environ["OPENAI_API_KEY"]
+client.organization = os.environ["OPENAI_ORGANIZATION"]
+
+def check_plan(content):
+    message = """
+以下はPostgreSQLの実行計画です。この実行計画について改善すべき点を挙げてください。
+---
+{0}
+""".format(content)
+    messages = [{"role": "user", "content": message}]
+    response = client.chat.completions.create(
+        model="gpt-3.5-turbo",
+        messages=messages
+    )
+    return response.choices[0].message.content
 
 def count_leading_spaces(line):
     return len(line) - len(line.lstrip())
@@ -72,4 +91,4 @@ if len(content) > 0:
         "plan.pdf",
         "application/pdf",
     )
-
+    st.write(check_plan(content))
